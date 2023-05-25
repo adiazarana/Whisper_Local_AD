@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARIEL</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+    <script>
+      async function submitForm(event, literalTranscription) {
+        event.preventDefault();
+        showProcessingMessage();
+        const form = document.getElementById("transcription-form");
+        const formData = new FormData(form);
+        const response = await fetch(literalTranscription ? "/upload_literal" : "/upload", {
+          method: "POST",
+          body: formData,
+        });
+        const transcription = await response.text();
+        document.getElementById("transcription").value = transcription;
+        hideProcessingMessage();
+      }
+
+      function showProcessingMessage() {
+        document.getElementById("status-message").innerText = "Procesando...";
+      }
+
+      function hideProcessingMessage() {
+        document.getElementById("status-message").innerText = "";
+      }
+
+      function downloadTranscription() {
+        const transcription = document.getElementById("transcription").value;
+        if (transcription === "") {
+          alert("No hay transcripción para descargar.");
+          return;
+        }
+        const blob = new Blob([transcription], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "transcripcion.txt";
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+
+      async function downloadSummary() {
+        const transcription = document.getElementById("transcription").value;
+        if (transcription === "") {
+          alert("No hay transcripción para resumir.");
+          return;
+        }
+        showProcessingMessage();
+        const response = await fetch("/summarize", {
+          method: "POST",
+          body: transcription,
+        });
+        const summary = await response.text();
+        hideProcessingMessage();
+        const blob = new Blob([summary], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "resumen.txt";
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+
+      function showFilename() {
+        const fileInput = document.getElementById("file-input");
+        const filename = fileInput.files[0].name;
+        document.getElementById("file-name").innerText = filename;
+      }
+    </script>
+  </head>
+  <body>
+<p> </p>
+    <h1>TRANSCRIPCIÓN</h1>
+    <p>
+      Soy ARIEL®, tu asistente para la redacción inteligente de escritos legales. En este módulo, utilizo inteligencia artificial con tecnología de procesamiento natural del lenguaje para transcribir tus archivos de audio a texto. Reconozco la mayoría de los formatos usuales (.mp4, .mp4, .m4a, etc.).
+    </p>
+    <p>
+      Intentaré ser lo más fiel posible al contenido original. Sin embargo, si no entiendo lo que se dice, usaré el contexto para dar sentido a la transcripción.
+    </p>
+    <p>
+      Recuerda: estoy en fase de entrenamiento, así que siempre revisa el producto final y contrástalo con el audio que has cargado.
+    </p>
+<p> </p>
+    <form id="transcription-form">
+      <input type="file" id="file-input" name="file" accept="audio/*" onchange="showFilename()" required>
+      <label for="file-input" class="file-upload-label">Seleccionar archivo</label>
+      <span id="file-name"></span>
+      <button type="button" class="download-btn" onclick="submitForm(event, false)">Transcribir</button>
+      <button type="button" class="download-btn" onclick="submitForm(event, true)">Transcripción literal</button>
+    </form>
+    <div id="status-message"></div>
+    <textarea id="transcription" rows="10" cols="50" readonly></textarea>
+    <br>
+    <button id="download-btn" class="download-btn" onclick="downloadTranscription()">Descargar transcripción</button>
+    <button id="download-summary-btn" class="download-btn" onclick="downloadSummary()">Descargar resumen</button>
+  </body>
+</html>

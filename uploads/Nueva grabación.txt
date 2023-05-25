@@ -1,0 +1,9 @@
+- Esto lo que hace es coger el modelo large de Whisper y lo manda por ahí, procesa el audio, pero luego de que procesa el audio, yo claro, la ventaja que es lo que no existe hoy es que después de que me arroja un texto, lo integré con Chat GPT-4 con una serie de instrucciones.
+
+- Que le dicen a este texto: corrígeme las mayúsculas, corrígeme las minúsculas, utiliza contexto manteniendo la fidelidad con el contenido, por si no entiendes una palabra, pues analiza el contexto y descífrala.
+
+- Distingue entre hablantes, entonces si va cambiando y tal, pues debería ir separándolos por párrafo. La decisión sigue siendo exacto por párrafo, mas no, todavía no se llega a especificar.
+
+- Por ejemplo, estamos en una audiencia y las partes se identifican, de pronto no interpretan patrones de hablar, porque usted habla de una manera particular y yo de otra manera determinada y así, o sea, no se puede identificar conformé el uso de palabras, conforme la manera de intervenir: "este está hablando, este está hablando, este está hablando".
+
+- Por sonidos no, por uso de palabras de pronto si podría configurarlo, por uso de palabras porque cada persona tiene un estilo particular. Yo le doy algo de ustedes, yo le escribo, cada persona habla un diálogo particularmente.
